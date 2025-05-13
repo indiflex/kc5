@@ -2,6 +2,7 @@ linux/data*
 node_modules
 tmp
 logs
+mysql
 .vscode
 .env
 .env.local*

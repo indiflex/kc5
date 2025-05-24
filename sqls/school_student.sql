@@ -30,10 +30,9 @@ alter table Student modify column name varchar(31) not null after updatedate;
 select * from Student;
 update Student set name = concat('김', id, '수');
 
-insert into Student(birthdt, major, mobile, email) 
-  values ('19900101', 1, '01001000001', '1@gmail.com'), 
-        ('19900102', 3, '01001000002', '2@gmail.com'), 
-        ('19900103', 2, '01001000003', '3@gmail.com');
+insert into Student(name, birthdt, major, mobile, email) 
+  values ('김1수', '19900101', 1, '01001000001', '1@gmail.com'), 
+        ('김3수', '19900102', 3, '01001000002', '3@gmail.com');
         
 insert into Student(name, birthdt, major, mobile, email) 
   values ('김4수', '19900101', 1, '01001000004', '4@gmail.com');

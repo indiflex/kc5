@@ -152,4 +152,6 @@ select * from Student s inner join Major m on s.major = m.id
 delete s from Student s inner join Major m on s.major = m.id
  where s.name like '김%' and m.name like '%학과';
  
+select * from Student;
+
 rollback;

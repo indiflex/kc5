@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WeekNames</title>
+</head>
+
+<body>
+  <div>
+    <button id="korBtn" onclick="setKor()">국어수업</button>
+    <span id="kor">요일을 선택하세요</span>
+  </div>
+  <div>
+    <button id="mathBtn">수학수업</button>
+    <span id="math">요일을 선택하세요</span>
+  </div>
+
+  <script>
+    const setKor = getNextWeek(document.getElementById('kor'));
+    const setMath = getNextWeek(document.getElementById('math'));
+    const mathBtn = document.getElementById('mathBtn');
+    mathBtn.addEventListener('click', setMath);
+
+    const weeks = '일월화수목금토';
+    function getNextWeek(span) {
+      let widx = -1;
+
+      return () => {
+        widx += 1;
+        if (widx >= weeks.length) widx = 0;
+        span.innerText = `${weeks[widx]}요일`;
+      };
+    };
+  </script>
+</body>
+
+</html>

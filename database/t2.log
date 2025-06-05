@@ -1,0 +1,80 @@
+# The proper term is pseudo_replica_mode, but we use this compatibility alias
+# to make the statement usable on server versions 8.0.24 and older.
+/*!50530 SET @@SESSION.PSEUDO_SLAVE_MODE=1*/;
+/*!50003 SET @OLD_COMPLETION_TYPE=@@COMPLETION_TYPE,COMPLETION_TYPE=0*/;
+DELIMITER /*!*/;
+# at 157
+#250527 21:46:46 server id 1  end_log_pos 126 CRC32 0x2ad59f1a 	Start: binlog v 4, server v 8.0.34 created 250527 21:46:46 at startup
+# Warning: this binlog is either in use or was not closed properly.
+ROLLBACK/*!*/;
+BINLOG '
+NrQ1aA8BAAAAegAAAH4AAAABAAQAOC4wLjM0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAA2tDVoEwANAAgAAAAABAAEAAAAYgAEGggAAAAICAgCAAAACgoKKioAEjQA
+CigAARqf1So=
+'/*!*/;
+# at 556
+#250527 21:50:09 server id 1  end_log_pos 648 CRC32 0x1683f481 	Update_rows: table id 93 flags: STMT_END_F
+
+BINLOG '
+AbU1aB8BAAAAXAAAAIgCAAAAAF0AAAAAAAEAAgAF//8ABwIS7YG065287J207Ja47Yq47YyAlgAA
+ACQAAAcCEu2UhOuhoO2KuOyXlOuTnO2MgJYAAAAkAIH0gxY=
+'/*!*/;
+### Row event for unknown table #93# at 648
+#250527 21:50:09 server id 1  end_log_pos 679 CRC32 0x6790917c 	Xid = 329
+COMMIT/*!*/;
+# at 679
+#250527 21:50:28 server id 1  end_log_pos 758 CRC32 0xbd2b6ff7 	Anonymous_GTID	last_committed=2	sequence_number=3	rbr_only=yes	original_committed_timestamp=1748350228119915	immediate_commit_timestamp=1748350228119915	transaction_length=336
+/*!50718 SET TRANSACTION ISOLATION LEVEL READ COMMITTED*//*!*/;
+# original_commit_timestamp=1748350228119915 (2025-05-27 21:50:28.119915 KST)
+# immediate_commit_timestamp=1748350228119915 (2025-05-27 21:50:28.119915 KST)
+/*!80001 SET @@session.original_commit_timestamp=1748350228119915*//*!*/;
+/*!80014 SET @@session.original_server_version=80034*//*!*/;
+/*!80014 SET @@session.immediate_server_version=80034*//*!*/;
+SET @@SESSION.GTID_NEXT= 'ANONYMOUS'/*!*/;
+# at 758
+#250527 21:50:28 server id 1  end_log_pos 846 CRC32 0x8fa1bd7d 	Query	thread_id=14	exec_time=0	error_code=0
+SET TIMESTAMP=1748350228/*!*/;
+SET @@session.pseudo_thread_id=14/*!*/;
+SET @@session.foreign_key_checks=1, @@session.sql_auto_is_null=0, @@session.unique_checks=1, @@session.autocommit=1/*!*/;
+SET @@session.sql_mode=1168113696/*!*/;
+SET @@session.auto_increment_increment=1, @@session.auto_increment_offset=1/*!*/;
+/*!\C utf8mb4 *//*!*/;
+SET @@session.character_set_client=255,@@session.collation_connection=255,@@session.collation_server=224/*!*/;
+SET @@session.lc_time_names=0/*!*/;
+SET @@session.collation_database=DEFAULT/*!*/;
+/*!80011 SET @@session.default_collation_for_utf8mb4=255*//*!*/;
+BEGIN
+/*!*/;
+# at 846
+#250527 21:50:28 server id 1  end_log_pos 907 CRC32 0x89e042fc 	Table_map: `testdb`.`dept` mapped to number 93
+# has_generated_invisible_primary_key=0
+# at 907
+#250527 21:50:28 server id 1  end_log_pos 984 CRC32 0x27ac441b 	Update_rows: table id 93 flags: STMT_END_F
+
+BINLOG '
+FLU1aBMBAAAAPQAAAIsDAAAAAF0AAAAAAAMABnRlc3RkYgAEZGVwdAAFAQEPAwICfAAIAQHwAgHg
+/ELgiQ==
+FLU1aB8BAAAATQAAANgDAAAAAF0AAAAAAAEAAgAF//8ABgIJ7ISc67KE7YyAbQAAACcAAAYCDOuw
+seyXlOuTnO2MgG0AAAAnABtErCc=
+'/*!*/;
+### UPDATE `testdb`.`dept`
+### WHERE
+###   @1=6
+###   @2=2
+###   @3='서버팀'
+###   @4=109
+###   @5=39
+### SET
+###   @1=6
+###   @2=2
+###   @3='백엔드팀'
+###   @4=109
+###   @5=39
+# at 984
+#250527 21:50:28 server id 1  end_log_pos 1015 CRC32 0x2b0a7ccf 	Xid = 340
+COMMIT/*!*/;
+SET @@SESSION.GTID_NEXT= 'AUTOMATIC' /* added by mysqlbinlog */ /*!*/;
+DELIMITER ;
+# End of log file
+/*!50003 SET COMPLETION_TYPE=@OLD_COMPLETION_TYPE*/;
+/*!50530 SET @@SESSION.PSEUDO_SLAVE_MODE=0*/;

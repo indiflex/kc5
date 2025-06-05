@@ -151,6 +151,12 @@ select * from Student s inner join Major m on s.major = m.id
 delete s from Student s inner join Major m on s.major = m.id
  where s.name like '김%' and m.name like '%학과';
  
-select * from Student;
+select * from Student where id > 0;
+delete from Student;
 
 rollback;
+
+show index from Student;
+explain select * from Student where email like 'a%';
+explain select * from Student where email like 'a%' or email like 'b%';
+explain select * from Student where email between 'a' and 'z';

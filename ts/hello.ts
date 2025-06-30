@@ -46,24 +46,28 @@ const y: User | undefined = isStudent(ss) ? ss : undefined;
 const zUser = {};
 
 type Member = {
+  id: number;
   name: string;
   addr: string;
   discountRate: number;
+  spend: number[];
 };
 type Guest = {
+  id: number;
   name: string;
   age: number;
+  spend: number;
 };
 
-let who: Member | Guest;
-who = {
-  name: '홍길동',
-  addr: '용산구',
-  discountRate: 0.1,
-};
-// who; // const who: Member
-const price = 10000 - 10000 * who.discountRate;
+let who: Member | Guest = { id: 2, name: 'xx', age: 26, addr: 'xx', spend: 1 };
+
+let m: Member;
+let g: Guest = { id: 2, name: 'xx', age: 26, spend: 0 };
+
+if (typeof who['spend'] === 'number') who = g;
 
 let xxx = { id: 2, name: 'xx', age: 26, addr: 'xx' };
-let m: Member;
-let g: Guest;
+
+// g = xxx;
+if ('age' in xxx) g = xxx;
+else m = xxx;

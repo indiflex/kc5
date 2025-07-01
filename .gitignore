@@ -9,3 +9,4 @@ mysql
 .env
 .env.local*
 ttt
+ttt.ts

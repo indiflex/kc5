@@ -18,7 +18,7 @@ type UserOnlyStrKeyPrefix = {
   // [k in keyof User as `user_${k & string}`]: User[k];
 };
 
-const deleteArray = (
+const deleteArrayx = (
   array: number[] | TUser[],
   startIdxOrKey: number | string,
   endIdxOrValue: number | TUser[keyof TUser] = array.length
@@ -45,6 +45,35 @@ const deleteArray = (
   //     a[startIdxOrKey] !== endIdxOrValue
   // );
 };
+
+const deleteArrayT = <T>(
+  array: T[],
+  startIdxOrKey: number | keyof T,
+  endIdxOrValue: number | T[keyof T] = array.length
+) => {
+  const cb =
+    typeof startIdxOrKey === 'number' && typeof endIdxOrValue === 'number'
+      ? (_: T, i: number) => i < startIdxOrKey || i >= endIdxOrValue
+      : (a: T) => a[startIdxOrKey as keyof T] !== endIdxOrValue;
+
+  return array.filter(cb);
+};
+
+// function f<T extends unknown[]>(T, ...args: T)
+// f(1, '2', false)
+const deleteArray = <T extends unknown[]>(
+  array: T,
+  startIdxOrKey: number | keyof T[0],
+  endIdxOrValue: number | T[0][keyof T[0]] = array.length
+) => {
+  const cb =
+    typeof startIdxOrKey === 'number' && typeof endIdxOrValue === 'number'
+      ? (_: T[0], i: number) => i < startIdxOrKey || i >= endIdxOrValue
+      : (a: T[0]) => a[startIdxOrKey as keyof T[0]] !== endIdxOrValue;
+
+  return array.filter(cb);
+};
+
 type TUser = { id: number; name: string };
 const arr = [1, 2, 3, 4];
 console.log(deleteArray(arr, 2)); // [1, 2]

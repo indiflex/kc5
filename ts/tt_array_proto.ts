@@ -1,7 +1,9 @@
-const hongx = { id: 1, name: 'Hing', 12: 1 };
-const kimx = { id: 2, name: 'Kim', 12: 1 };
-const leex = { id: 3, name: 'Lee', 12: 1 };
+const hongx = { id: 1, name: 'Hing', dept: 'Server' };
+const kimx = { id: 2, name: 'Kim', dept: 'Server' };
+const leex = { id: 3, name: 'Lee', dept: 'Client' };
 const users = [hongx, leex, kimx];
+
+type PropertyType = string | number | symbol;
 
 declare global {
   interface Array<T> {
@@ -27,12 +29,30 @@ declare global {
     sortBy<P extends keyof T | `${keyof T & string}:${'asc' | 'desc'}`>(
       prop: P
     ): T[];
+
+    groupBy<GF extends (a: T) => PropertyType>(
+      gfn: GF
+    ): Record<PropertyType, T[]>;
   }
 }
 
+Array.prototype.groupBy = function <T, GF extends (a: T) => PropertyType>(
+  this: T[],
+  gfn: GF
+) {
+  const ret: Record<PropertyType, T[]> = {};
+  for (const a of this) {
+    const k = gfn(a);
+    ret[k] ||= [];
+    ret[k].push(a);
+  }
+
+  return ret;
+};
+console.log(users.groupBy(({ dept }) => dept));
+
 // type U = {id: number, name: string}
 // type X = keyof U | `${keyof U & string}:${'asc' | 'desc'}`;
-
 Array.prototype.sortBy = function <
   T,
   P extends keyof T | `${keyof T & string}:${'asc' | 'desc'}`
@@ -99,52 +119,28 @@ Array.prototype.mapBy = function <T, P extends keyof T>(this: T[], prop: P) {
 console.log(users.mapBy('id')); // [1, 3, 2];
 console.log(users.mapBy('name')); // ['Hong', 'Lee', 'Kim']);
 
-// Array.prototype.groupBy = function (gfn) {
-//   const ret = {};
-//   for (const a of this) {
-//     const k = gfn(a);
-//     ret[k] ||= [];
-//     ret[k].push(a);
-//   }
+Object.defineProperties(Array.prototype, {
+  firstObject: {
+    get<T>(this: T[]): T | undefined {
+      return this[0];
+    },
+    set<T>(this: T[], value: T) {
+      this[0] = value;
+    },
+  },
+  lastObject: {
+    get<T>(this: T[]) {
+      return this.at(-1);
+    },
+    set<T>(this: T[], value: T) {
+      this[this.length - 1] = value;
+    },
+  },
+});
 
-//   return ret;
-// };
-
-// Object.defineProperties(Array.prototype, {
-//   firstObject: {
-//     get() {
-//       return this[0];
-//     },
-//     set(value) {
-//       this[0] = value;
-//       // this.with(0, value); // pure fn
-//     },
-//   },
-//   lastObject: {
-//     get() {
-//       return this.at([-1]);
-//     },
-//     set(value) {
-//       this[this.length - 1] = value;
-//       // this.with(-1, value);
-//     },
-//   },
-// });
-
-// console.log(users.groupBy(({ dept }) => dept));
-// /*
-// Server: [
-//   { id: 1, name: 'Hong', dept: 'Server' },
-//   { id: 2, name: 'Kim', dept: 'Server' },
-// ],
-// Client: [
-//   { id: 3, name: 'Lee', dept: 'Client' }
-// ],
-// */
-
-// console.log('first/last=', users.firstObject.name, users.lastObject.name); // hong/lee
-// users.firstObject = kimx;
-// users.lastObject = hongx;
-// console.log('first/last=', users.firstObject.name, users.lastObject.name); // kim/hong
+console.log('first/last=', users.firstObject.name, users.lastObject.name); // hong/lee
+users.firstObject = kimx;
+users.lastObject = hongx;
+console.log('first/last=', users.firstObject.name, users.lastObject.name); // kim/hong
 
 export {};

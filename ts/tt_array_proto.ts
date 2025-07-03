@@ -89,7 +89,8 @@ Array.prototype.rejectBy = function <T, P extends keyof T>(
     if (isIncludes && typeof a[prop] === 'string')
       return !a[prop].includes(value as string);
     if (isIncludes && Array.isArray(a[prop])) return !a[prop].includes(value);
-    else return a[prop] !== value;
+
+    return a[prop] !== value;
   });
 };
 
@@ -106,7 +107,8 @@ Array.prototype.filterBy = function <T, P extends keyof T>(
     if (isIncludes && typeof a[prop] === 'string')
       return a[prop].includes(value as string);
     if (isIncludes && Array.isArray(a[prop])) return a[prop].includes(value);
-    else return a[prop] === value;
+
+    return a[prop] === value;
   });
 };
 console.log(users.filterBy('id', 2)); // [kim]);

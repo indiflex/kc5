@@ -127,16 +127,22 @@ Object.defineProperties(Array.prototype, {
     set<T>(this: T[], value: T) {
       this[0] = value;
     },
+    enumerable: false,
+    configurable: true,
   },
   lastObject: {
     get<T>(this: T[]) {
-      return this.at(-1);
+      return this.at(-1) as T;
     },
     set<T>(this: T[], value: T) {
       this[this.length - 1] = value;
     },
+    enumerable: false,
+    configurable: true,
   },
 });
+
+const u1 = users.firstObject;
 
 console.log('first/last=', users.firstObject.name, users.lastObject.name); // hong/lee
 users.firstObject = kimx;

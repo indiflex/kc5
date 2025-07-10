@@ -1,5 +1,6 @@
 import { useState, type MouseEvent } from 'react';
 import './App.css';
+import My from './components/My';
 
 export type LoginUser = { id: number; name: string };
 export type CartItem = { id: number; name: string; price: number };
@@ -39,11 +40,8 @@ function App() {
   return (
     <>
       <h1>React Basic</h1>
-      {session.loginUser ? (
-        <button onClick={logout}>{session.loginUser?.name} Logined</button>
-      ) : (
-        <button onClick={() => login(2, 'Kim')}>Login</button>
-      )}
+      <My session={session} login={login} logout={logout} />
+
       <button onClick={clickCount}>count is {count}</button>
     </>
   );

@@ -10,15 +10,17 @@ const memoizeAdd = memoized((a: number, b: number) => {
   return a + b;
 });
 
-console.log(memoizeAdd(1, 2)); // 3
-console.log(memoizeAdd(3, 4)); // 7
+console.log('memoizeAdd(1, 2)=', memoizeAdd(1, 2)); // 3
+console.log('memoizeAdd(3, 4)=', memoizeAdd(3, 4)); // 7
 
 const memoizeFactorial = memoized((n: number): number => {
   if (n <= 1) return 1;
 
   return n * memoizeFactorial(n - 1);
 });
-
+console.log('memoizeFactorial(3)=', memoizeFactorial(3)); //6
+console.log('memoizeFactorial(5)=', memoizeFactorial(5)); //120
+// ------------------------------------------
 // 방법1) args를 Generic으로!
 const debounce = <T extends unknown[]>(
   cb: (...args: T) => void,

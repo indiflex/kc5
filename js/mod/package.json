@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "date-fns": "^4.1.0",
+    "jtestss": "^0.1.4",
     "moment": "^2.30.1"
   }
 }

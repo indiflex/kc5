@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "t": "jest",
     "test": "jest --watch"
   },
   "keywords": [],
@@ -16,5 +17,8 @@
     "jest-html-reporter": "^4.3.0",
     "ts-jest": "^29.4.0",
     "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "jtestss": "^0.1.0"
   }
 }

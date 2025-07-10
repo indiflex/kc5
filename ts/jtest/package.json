@@ -1,0 +1,24 @@
+{
+  "name": "jtestss",
+  "version": "0.1.4",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "jest sum.test.ts",
+    "test": "jest --watch",
+    "t": "jest",
+    "build": "tsup index.ts --format cjs,esm --dts"
+  },
+  "keywords": [],
+  "author": "SeniorCoding",
+  "license": "MIT",
+  "description": "",
+  "devDependencies": {
+    "@jest/globals": "^30.0.4",
+    "@types/jest": "^30.0.0",
+    "jest": "^30.0.4",
+    "jest-html-reporter": "^4.3.0",
+    "ts-jest": "^29.4.0",
+    "tsup": "^8.5.0",
+    "typescript": "^5.8.3"
+  }
+}

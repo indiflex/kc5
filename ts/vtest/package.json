@@ -1,5 +1,5 @@
 {
-  "name": "vitest1",
+  "name": "vtest",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "test:cov": "vitest --coverage"
+    "test:coverage": "vitest --coverage"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "3.2.4",
@@ -19,6 +19,6 @@
     "vitest": "^3.2.4"
   },
   "dependencies": {
-    "jtestss": "^0.1.0"
+    "jtestss": "^0.1.1"
   }
 }

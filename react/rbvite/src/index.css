@@ -54,6 +54,16 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+button:hover {
+  background-color: #efefef;
+}
+button.btn {
+  border: 1px solid #eee;
+}
+button.btn.btn-sm {
+  padding: 0.1rem 0.2rem;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -65,4 +75,8 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+.red {
+  color: red;
 }

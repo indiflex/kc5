@@ -1,0 +1,9 @@
+ul {
+  list-style: none;
+}
+
+form.item-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}

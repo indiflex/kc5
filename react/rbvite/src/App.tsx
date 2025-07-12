@@ -37,10 +37,27 @@ function App() {
 
   const logout = () => setSession({ ...session, loginUser: null });
 
+  const addItem = (newer: CartItem) =>
+    setSession({ ...session, cart: [...session.cart, newer] });
+
+  const removeItem = (id: number) => {
+    if (confirm('Are u sure??'))
+      setSession({
+        ...session,
+        cart: session.cart.filter(item => item.id !== id),
+      });
+  };
+
   return (
     <>
-      <h1>React Basic</h1>
-      <My session={session} login={login} logout={logout} />
+      <h1>ReactBasic</h1>
+      <My
+        session={session}
+        login={login}
+        logout={logout}
+        addItem={addItem}
+        removeItem={removeItem}
+      />
 
       <button onClick={clickCount}>count is {count}</button>
     </>

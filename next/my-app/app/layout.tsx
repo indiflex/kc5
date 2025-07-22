@@ -36,6 +36,7 @@ export default function RootLayout({
             <Link href={'/hi/afternoon'}>Hi/Afternoon</Link>
             <Link href={'/hi/evening'}>Hi/Evening</Link>
           </div>
+          <Link href={'/photos'}>Photos</Link>
         </nav>
         <hr className='border-amber-200' />
         <div className='container'>{children}</div>

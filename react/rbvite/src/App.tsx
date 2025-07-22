@@ -1,6 +1,7 @@
 import { useState, type MouseEvent } from 'react';
 import './App.css';
 import My from './components/My';
+import { useCounter } from './context/counter/useCounter';
 
 export type LoginUser = { id: number; name: string };
 export type CartItem = { id: number; name: string; price: number };
@@ -20,13 +21,15 @@ const SampleSession: Session = {
 };
 
 function App() {
-  const [count, setCount] = useState(0);
+  // const [count, setCount] = useState(0);
+  const { count, plusCount } = useCounter();
   const [session, setSession] = useState<Session>(SampleSession);
 
   const clickCount = (evt: MouseEvent<HTMLButtonElement>) => {
     evt.preventDefault();
     evt.stopPropagation();
-    setCount(count => count + 1);
+    // setCount(count => count + 1);
+    plusCount();
   };
 
   const login = (id: number, name: string) =>
@@ -37,8 +40,19 @@ function App() {
 
   const logout = () => setSession({ ...session, loginUser: null });
 
-  const addItem = (newer: CartItem) =>
+  const addItem = (newer: CartItem) => {
+    newer.id = Math.max(...session.cart.map(({ id }) => id), 0) + 1;
     setSession({ ...session, cart: [...session.cart, newer] });
+  };
+
+  const editItem = (editingItem: CartItem) => {
+    setSession({
+      ...session,
+      cart: session.cart.map(item =>
+        item.id === editingItem.id ? editingItem : item
+      ),
+    });
+  };
 
   const removeItem = (id: number) => {
     if (confirm('Are u sure??'))
@@ -56,6 +70,7 @@ function App() {
         login={login}
         logout={logout}
         addItem={addItem}
+        editItem={editItem}
         removeItem={removeItem}
       />
 

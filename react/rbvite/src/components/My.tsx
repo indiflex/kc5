@@ -2,13 +2,14 @@ import type { CartItem, Session } from '../App';
 import Login from './Login';
 import Profile from './Profile';
 import './My.css';
-import { useRef, type FormEvent, type RefObject } from 'react';
+import { useRef, useState, type FormEvent, type RefObject } from 'react';
 
 type Props = {
   session: Session;
   logout: () => void;
   login: (id: number, name: string) => void;
   addItem: (newer: CartItem) => void;
+  editItem: (editingItem: CartItem) => void;
   removeItem: (id: number) => void;
 };
 
@@ -17,26 +18,24 @@ export default function My({
   login,
   logout,
   addItem,
+  editItem,
   removeItem,
 }: Props) {
-  const idRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
   const priceRef = useRef<HTMLInputElement>(null);
 
-  const addCartItem = (evt: FormEvent<HTMLFormElement>) => {
-    evt.preventDefault();
-    if (!idRef.current || !nameRef.current || !priceRef.current) return;
+  const [workingItem, setWorkingItem] = useState<CartItem | null>(null);
 
-    const id = idRef.current?.value;
+  const saveCartItem = (evt: FormEvent<HTMLFormElement>) => {
+    evt.preventDefault();
+    if (!nameRef.current || !priceRef.current) return;
+
+    const id = workingItem ? workingItem.id : 0;
     const name = nameRef.current?.value;
     const price = priceRef.current?.value;
 
     let key: string | undefined;
-    let ref: RefObject<HTMLInputElement | null> = idRef;
-
-    if (!id) {
-      key = '아이디';
-    }
+    let ref: RefObject<HTMLInputElement | null> = nameRef;
 
     if (!name || !name?.trim()) {
       key = '상품명';
@@ -49,17 +48,31 @@ export default function My({
     }
 
     if (key) {
-      alert(`${key} 값을 입력하세요!`);
+      alert(`${key} 을(를) 입력하세요!`);
       ref?.current?.focus();
       return;
     }
 
-    addItem({ id: Number(id), name: name!, price: Number(price) });
+    const isEditing = !!workingItem;
+    const action = isEditing ? editItem : addItem;
 
-    idRef.current.value = '';
+    // console.table({ id, name: name!, price: Number(price) });
+    action({ id, name: name!, price: Number(price) });
+
+    if (isEditing) setWorkingItem(null);
+
     nameRef.current.value = '';
     priceRef.current.value = '';
-    idRef.current?.focus();
+    nameRef.current?.focus();
+  };
+
+  const setWorkingItemValues = (item: CartItem) => {
+    if (!nameRef.current || !priceRef.current) return;
+
+    nameRef.current.value = item.name;
+    priceRef.current.value = String(item.price);
+
+    setWorkingItem(item);
   };
 
   return (
@@ -70,10 +83,17 @@ export default function My({
         <Login login={login} />
       )}
 
+      {/* <h1>workingItem: {workingItem?.id}</h1> */}
       <ul>
         {session.cart.map(({ id, name, price }) => (
           <li key={id}>
-            <small>{id}.</small> {name}
+            <small>{id}.</small>
+            <a
+              href='#'
+              onClick={() => setWorkingItemValues({ id, name, price })}
+            >
+              {name}
+            </a>
             <small>({price.toLocaleString()})</small>
             <button
               onClick={() => removeItem(id)}
@@ -85,12 +105,16 @@ export default function My({
           </li>
         ))}
       </ul>
-      <form onSubmit={addCartItem} className='item-form'>
-        <input type='number' ref={idRef} />
-        <input type='text' ref={nameRef} />
-        <input type='number' ref={priceRef} />
+      <form onSubmit={saveCartItem} className='item-form'>
+        <input type='text' ref={nameRef} placeholder='name...' />
+        <input
+          type='number'
+          name='price'
+          ref={priceRef}
+          placeholder='price...'
+        />
         <button type='reset'>취소</button>
-        <button type='submit'>등록</button>
+        <button type='submit'>{workingItem ? '수정' : '등록'}</button>
       </form>
     </>
   );

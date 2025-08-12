@@ -2,12 +2,11 @@ import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import { MonitorIcon, MoonIcon, SunIcon } from 'lucide-react';
 
-type Props = {
-  themeIcon: {
-    light: Element;
-    system: Element;
-    dark: Element;
-  };
+const themes = ['light', 'system', 'dark'];
+const themeIcon = {
+  light: <MonitorIcon />,
+  system: <MoonIcon />,
+  dark: <SunIcon />,
 };
 
 export default function ThemeChanger() {
@@ -18,13 +17,6 @@ export default function ThemeChanger() {
     setMounted(true);
   }, []);
 
-  const themes = ['light', 'system', 'dark'];
-  const themeIcon = {
-    light: <MonitorIcon />,
-    system: <MoonIcon />,
-    dark: <SunIcon />,
-  };
-
   const changeTheme = () => {
     let idx = themes.indexOf(theme as keyof typeof themeIcon) + 1;
     if (idx === themes.length) idx = 0;
@@ -32,7 +24,7 @@ export default function ThemeChanger() {
   };
 
   if (!mounted) {
-    return <SunIcon className='' />;
+    return <SunIcon className='w-2 h-2' />;
   }
 
   return (

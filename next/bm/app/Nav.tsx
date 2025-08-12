@@ -21,7 +21,7 @@ export default function Nav() {
       <ThemeChanger />
 
       {didLogin ? (
-        <Link href='/my'>
+        <Link href='/api/auth/signout'>
           <Image
             src={session?.data?.user?.image || ''}
             alt={session?.data?.user?.name || ''}

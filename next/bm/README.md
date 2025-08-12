@@ -110,8 +110,10 @@ pnpm install
 pnpm dlx shadcn@latest init
 ```
 
+```bash 모든 컴포넌트 설치
+pnpx shadcn@latest add dashboard-01
+```
 
 
-
-## Deploy on Vercel
+## Deploy
 

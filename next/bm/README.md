@@ -58,7 +58,10 @@ pnpm add -D @trivago/prettier-plugin-sort-imports
 }
 ```
 
-1. vi eslint.config.mjs
+```bash
+vi eslint.config.mjs
+```
+
 ```javascript
 import { FlatCompat } from '@eslint/eslintrc'
 
@@ -75,15 +78,32 @@ const eslintConfig = [
 
 export default eslintConfig
 ```
-1. vi .nvmrc
-```v22```
-1. vi .npmrc
+
+```bash
+vi .nvmrc
+```
+
+```
+v22
+```
+
+```bash
+vi .npmrc
+```
+
 ```
 public-hoist-pattern[]=*eslint*
 ```
-1. pnpm install
-1. pnpm dlx shadcn@latest init
-1. 
+
+```bash
+pnpm install
+```
+
+```bash
+pnpm dlx shadcn@latest init
+```
+
+
 
 
 ## Deploy on Vercel

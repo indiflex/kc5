@@ -19,8 +19,17 @@ bun dev
 
 ```bash
 pnpm dlx create-next-app@latest bm
+```
+
+```bash
 cd bm
+```
+
+```bash
 pnpm add -D prettier eslint-config-prettier 
+```
+
+```bash
 pnpm add -D @trivago/prettier-plugin-sort-imports
 ```
 
@@ -48,6 +57,7 @@ pnpm add -D @trivago/prettier-plugin-sort-imports
   ]
 }
 ```
+
 1. vi eslint.config.mjs
 ```javascript
 import { FlatCompat } from '@eslint/eslintrc'

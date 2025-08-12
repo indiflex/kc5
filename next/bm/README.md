@@ -15,7 +15,7 @@ bun dev
 ```
 
 ## Project Setup Scripts
-1. setup
+1. create next project
 
 ```bash
 pnpm dlx create-next-app@latest bm
@@ -25,6 +25,7 @@ pnpm dlx create-next-app@latest bm
 cd bm
 ```
 
+1. prettier & eslint setting
 ```bash
 pnpm add -D prettier eslint-config-prettier 
 ```

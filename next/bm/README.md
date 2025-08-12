@@ -25,7 +25,8 @@ pnpm dlx create-next-app@latest bm
 cd bm
 ```
 
-1. prettier & eslint setting
+2. prettier & eslint setting
+
 ```bash
 pnpm add -D prettier eslint-config-prettier 
 ```
@@ -33,8 +34,6 @@ pnpm add -D prettier eslint-config-prettier
 ```bash
 pnpm add -D @trivago/prettier-plugin-sort-imports
 ```
-
-2. vi .prettierrc
 
 ```json
 {

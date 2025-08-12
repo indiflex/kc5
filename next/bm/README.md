@@ -15,7 +15,9 @@ bun dev
 ```
 
 ## Project Setup Scripts
-1. ```bash
+1. setup
+
+```bash
 pnpm dlx create-next-app@latest bm
 cd bm
 pnpm add -D prettier eslint-config-prettier 
@@ -23,6 +25,7 @@ pnpm add -D @trivago/prettier-plugin-sort-imports
 ```
 
 2. vi .prettierrc
+
 ```json
 {
   "singleQuote": true,

@@ -114,6 +114,27 @@ pnpm dlx shadcn@latest init
 pnpx shadcn@latest add dashboard-01
 ```
 
+7. Dark/Light mode
+```bash
+pnpm add next-themes
+```
+
+components/theme-provider.tsx
+
+```typescript
+'use client';
+
+import { ThemeProvider as NextThemesProvider } from 'next-themes';
+import { ComponentProps } from 'react';
+
+export function ThemeProvider({
+  children,
+  ...props
+}: ComponentProps<typeof NextThemesProvider>) {
+  return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
+}
+````
+
 
 ## Deploy
 

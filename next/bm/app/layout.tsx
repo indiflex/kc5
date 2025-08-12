@@ -1,6 +1,7 @@
 import { ThemeProvider } from '@/components/theme-provider';
 import { SessionProvider } from 'next-auth/react';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { use } from 'react';
 import { BookMarkedIcon } from 'lucide-react';
@@ -33,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang='en' suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased `}
       >
         <SessionProvider session={session}>
           <ThemeProvider
@@ -44,9 +45,13 @@ export default function RootLayout({
           >
             <div className='flex flex-col container justify-between mx-auto h-screen'>
               <header className='flex justify-between'>
-                <h1 className='text-3xl flex items-center tracking-tight font-bold text-green-500'>
-                  <BookMarkedIcon /> Book & Mark
-                </h1>
+                <Link
+                  href='/'
+                  className='text-3xl flex items-center tracking-tight font-bold text-green-500 no-underline'
+                >
+                  <BookMarkedIcon size={28} />
+                  Book & Mark
+                </Link>
                 <Nav />
               </header>
               <main className='border flex-1'>{children}</main>

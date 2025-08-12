@@ -135,7 +135,7 @@ export function ThemeProvider({
 }
 
 const { theme, setTheme } = useTheme();
-````
+```
 
 components/theme-changer.tsx
 ```typescript
@@ -262,7 +262,7 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
-      { hostname: 'lh3.googleusercontent.com' },
+      { hostname: '*.googleusercontent.com' },
       { hostname: 'avatars.githubusercontent.com' },
       { hostname: 'phinf.pstatic.net' },
       { hostname: '*.kakaocdn.net' },
@@ -273,7 +273,122 @@ const nextConfig: NextConfig = {
 export default nextConfig;
 ```
 
+9. xx
+
+10. prisma setting
+```bash
+pnpm i -D prisma
+```
+
+```bash
+pnpm dlx prisma init --datasource-provider mysql
+```
+
+eslint.config.mjs  (to build project)
+
+```
+ignorePatterns: ['lib/generated/prisma/**'],
+```
+
+table 생성해서 pull
+
+```
+pnpm dlx prisma db pull
+```
+
+cf. package.json
+```json
+"scripts": {
+  "db:pull": "dotenv -e .env.local prisma db pull",
+  "db:gen": "dotenv -e .env.local prisma generate",
+  "db:push": "dotenv -e .env.local prisma db push",
+  "db:seed": "dotenv -e .env.local prisma db seed"
+},
+"prisma": {
+  "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+},
+```
+
+```
+pnpm dlx prisma generate
+```
+
+prisma client (db.ts)
+
+```typescript
+import { PrismaClient } from '@/lib/generated/prisma/client';
+
+const prisma = new PrismaClient();
+
+export default prisma;
+```
+
+seed data (prisma/seed.ts)
+
+```typescript
+async function main() {
+  const sico = await prisma.member.upsert({
+    where: { email: 'indiflex.sico@gmail.com' },
+    update: {},
+    create: {
+      email: 'indiflex.sico@gmail.com',
+      nickname: 'sico',
+      Books: {
+        create: {
+          title: 'sico first book',
+          withdel: false,
+          Marks: {
+            create: {
+              url: 'https://naver.com',
+              title: 'Naver',
+              descript: 'seeding...',
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const indiflex = await prisma.member.upsert({
+    where: { email: 'indiflex.corp@gmail.com' },
+    update: {},
+    create: {
+      email: 'indiflex.corp@gmail.com',
+      nickname: 'indiflex',
+      Books: {
+        create: [
+          {
+            title: 'indiflex first book',
+            withdel: false,
+          },
+          {
+            title: 'indiflex second book',
+            withdel: true,
+          },
+        ],
+      },
+    },
+  });
+
+  console.log({ sico, indiflex });
+}
+```
+
+11. encrypt password
+
+```bash
+pnpm add bcryptjs  
+```
+
+```typescript
+import { compare, hash } from 'bcryptjs';
+
+const encPasswd = await hash(passwd, 10);
+
+const isValid = 
+      await compare(passwd, encPasswd);
+```
 
 
-## Deploy
+
 

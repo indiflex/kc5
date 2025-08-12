@@ -20,8 +20,9 @@ pnpm dlx create-next-app@latest bm
 cd bm
 pnpm add -D prettier eslint-config-prettier 
 pnpm add -D @trivago/prettier-plugin-sort-imports
-vi .prettierrc
 ```
+
+2. vi .prettierrc
 ```json
 {
   "singleQuote": true,

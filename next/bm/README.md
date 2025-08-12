@@ -133,17 +133,14 @@ export function ThemeProvider({
 }: ComponentProps<typeof NextThemesProvider>) {
   return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
 }
+
+const { theme, setTheme } = useTheme();
 ````
 
 8. next-auth
 
 ```bash
 pnpm add next-auth@beta
-```
-
-Auth key 생성 (.env.local에 자동으로 생성)
-```bash
-pnpm dlx auth secret
 ```
 
 lib/auth.ts
@@ -169,6 +166,11 @@ export const {
   },
   providers: [Google, GitHub, Naver, Kakao],
 });
+```
+
+Auth key 생성 (.env.local에 자동으로 생성)
+```bash
+pnpm dlx auth secret
 ```
 
 .env.local
@@ -208,6 +210,23 @@ const session = use(auth());
 <SessionProvider session={session}>
   ...
 </SessionProvider>
+```
+
+next.config.ts
+
+```typescript
+import type { NextConfig } from 'next';
+
+const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      { hostname: 'lh3.googleusercontent.com' },
+      { hostname: 'avatars.githubusercontent.com' },
+    ],
+  },
+};
+
+export default nextConfig;
 ```
 
 ## Deploy

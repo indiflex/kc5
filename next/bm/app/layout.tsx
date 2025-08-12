@@ -29,8 +29,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = use(auth());
+
   return (
-    <html lang='en'>
+    <html lang='en' suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -41,7 +42,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <div className='flex flex-col containerx justify-between mx-auto h-screen'>
+            <div className='flex flex-col container justify-between mx-auto h-screen'>
               <header className='flex justify-between'>
                 <h1 className='text-3xl flex items-center tracking-tight font-bold text-green-500'>
                   <BookMarkedIcon /> Book & Mark

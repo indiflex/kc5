@@ -135,6 +135,80 @@ export function ThemeProvider({
 }
 ````
 
+8. next-auth
+
+```bash
+pnpm add next-auth@beta
+```
+
+Auth key 생성 (.env.local에 자동으로 생성)
+```bash
+pnpm dlx auth secret
+```
+
+lib/auth.ts
+
+```typescript
+import NextAuth from 'next-auth';
+import GitHub from 'next-auth/providers/github';
+import Google from 'next-auth/providers/google';
+import Kakao from 'next-auth/providers/kakao';
+import Naver from 'next-auth/providers/naver';
+
+export const {
+  handlers: { GET, POST },
+  auth,
+  signIn,
+  signOut,
+} = NextAuth({
+  session: {
+    strategy: 'jwt',
+  },
+  pages: {
+    // signIn: '/login',
+  },
+  providers: [Google, GitHub, Naver, Kakao],
+});
+```
+
+.env.local
+```
+DATABASE_URL="mysql://bookmarker@--@127.0.0.1:3309/bookmarkdb?connection_limit=5&pool_timeout=10"
+
+AUTH_SECRET="FzF89ROlg5pOU/GBwHLxvJN"
+
+AUTH_GOOGLE_ID="641566194982-20b29cu2ssn8.apps.googleusercontent.com"
+AUTH_GOOGLE_SECRET=GOCSPX-pTpVkTlLswWi9X7
+
+AUTH_GITHUB_ID=Ov23lilo1Te
+AUTH_GITHUB_SECRET=3f776e98adfe551f474115d75ebf
+
+AUTH_NAVER_ID="t7BZF1kwdh3"
+AUTH_NAVER_SECRET="wMIch8ci"
+
+AUTH_KAKAO_ID="d3134d7758c891199f62c9820"
+AUTH_KAKAO_SECRET="7WoTBDPzI9MdtmfsyrqIlSTP"
+```
+
+app/api/auth/[...nextauth]/route.ts
+
+```typescript
+export { GET, POST } from '@/lib/auth';
+// export const runtime = 'edge'; // 'nodejs'
+```
+
+app/layout.tsx
+
+```typescript
+import { SessionProvider } from 'next-auth/react';
+import { auth } from '@/lib/auth';
+
+const session = use(auth());
+...
+<SessionProvider session={session}>
+  ...
+</SessionProvider>
+```
 
 ## Deploy
 

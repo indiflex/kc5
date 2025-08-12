@@ -79,6 +79,8 @@ const eslintConfig = [
 export default eslintConfig
 ```
 
+3. node setting
+
 ```bash
 vi .nvmrc
 ```
@@ -86,6 +88,8 @@ vi .nvmrc
 ```
 v22
 ```
+
+4. pnpm hoisting setting (for eslint)
 
 ```bash
 vi .npmrc
@@ -95,9 +99,12 @@ vi .npmrc
 public-hoist-pattern[]=*eslint*
 ```
 
+5. 새롭게 pnpm 으로 설치
 ```bash
 pnpm install
 ```
+
+6. shadcn 설치
 
 ```bash
 pnpm dlx shadcn@latest init

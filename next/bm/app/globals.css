@@ -45,6 +45,8 @@
 
 :root {
   --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
@@ -74,8 +76,6 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
 }
 
 .dark {
@@ -117,15 +117,21 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground bg-gradient-to-br from-neutral-200;
+    @apply bg-background text-foreground;
   }
   a {
-    @apply text-blue-500 hover:text-blue-700 hover:underline;
+    @apply text-blue-500 hover:text-blue-800;
   }
 }
 
 @layer utilities {
   .active-scale {
-    @apply active:scale-[0.8] transition-all duration-[100ms];
+    @apply active:scale-75 active:no-underline transition-all duration-[100ms] ease-in-out;
+  }
+}
+
+@layer components {
+  .btn-icon {
+    @apply border border-blue-300 rounded-full p-1 [&>svg]:stroke-blue-500 [&>svg:hover]:stroke-blue-800 cursor-pointer hover:ring-1 hover:ring-blue-500;
   }
 }

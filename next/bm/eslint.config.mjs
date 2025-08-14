@@ -7,7 +7,8 @@ const compat = new FlatCompat({
 const eslintConfig = [
   ...compat.config({
     extends: ['next', 'next/typescript', 'prettier'],
-    rules: {}
+    rules: {},
+    ignorePatterns: ['lib/generated/prisma/**'],
   }),
 ]
 

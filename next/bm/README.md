@@ -254,7 +254,7 @@ const session = use(auth());
 </SessionProvider>
 ```
 
-next.config.ts
+9. next.config.ts에 image host 등록
 
 ```typescript
 import type { NextConfig } from 'next';
@@ -273,8 +273,6 @@ const nextConfig: NextConfig = {
 export default nextConfig;
 ```
 
-9. xx
-
 10. prisma setting
 ```bash
 pnpm i -D prisma
@@ -282,26 +280,26 @@ pnpm i -D prisma
 
 ```bash
 pnpm dlx prisma init --datasource-provider mysql
+
+# ==> .env 자동생성되는데, 지우고나서 .env.local에 DB 연결정보 세팅
 ```
 
-eslint.config.mjs  (to build project)
+
+eslint.config.mjs (under rule) to build project
 
 ```
 ignorePatterns: ['lib/generated/prisma/**'],
 ```
 
-table 생성해서 pull
+table 생성
 
-```
-pnpm dlx prisma db pull
-```
-
-cf. package.json
+package.json에 script 설정 
 ```json
 "scripts": {
   "db:pull": "dotenv -e .env.local prisma db pull",
   "db:gen": "dotenv -e .env.local prisma generate",
   "db:push": "dotenv -e .env.local prisma db push",
+  "db:reset": "dotenv -e .env.local prisma migrate reset",
   "db:seed": "dotenv -e .env.local prisma db seed"
 },
 "prisma": {
@@ -310,7 +308,12 @@ cf. package.json
 ```
 
 ```
-pnpm dlx prisma generate
+pnpm db:pull
+```
+
+generate해서 prisma-client 설치
+```
+pnpm db:gen
 ```
 
 prisma client (db.ts)
@@ -389,6 +392,9 @@ const isValid =
       await compare(passwd, encPasswd);
 ```
 
-
+12. zod
+```bash
+pnpm add zod
+```
 
 

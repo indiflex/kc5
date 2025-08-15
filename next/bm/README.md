@@ -35,6 +35,8 @@ pnpm add -D prettier eslint-config-prettier
 pnpm add -D @trivago/prettier-plugin-sort-imports
 ```
 
+.prettierrc 파일 작성 
+
 ```json
 {
   "singleQuote": true,
@@ -56,6 +58,40 @@ pnpm add -D @trivago/prettier-plugin-sort-imports
     "^[./]"
   ]
 }
+```
+
+.prettierignore 파일 생성해서 prettier에서 제외하기
+
+```
+# Markdown 파일 제외
+*.md
+*.css
+
+# 이미지, JSON, log 제외
+*.png
+*.jpg
+*.json
+*.log
+*.ico
+*.svg
+
+# node_modules와 빌드 폴더 제외
+node_modules
+dist
+build
+LICENSE
+
+.*
+*.sql
+*.yaml
+*.yml
+*.json
+*.prisma
+```
+
+package.json에 format script 걸기
+```json
+"format": "prettier --write .",
 ```
 
 ```bash
@@ -241,7 +277,7 @@ export { GET, POST } from '@/lib/auth';
 // export const runtime = 'edge'; // 'nodejs'
 ```
 
-app/layout.tsx
+app/layout.tsx 에 SessionProvider 걸기
 
 ```typescript
 import { SessionProvider } from 'next-auth/react';
@@ -252,6 +288,32 @@ const session = use(auth());
 <SessionProvider session={session}>
   ...
 </SessionProvider>
+```
+
+middleware.ts 생성
+
+```typescript
+import { NextResponse, type NextRequest } from 'next/server';
+import { auth } from './lib/auth';
+
+export async function middleware(req: NextRequest) {
+  const session = await auth();
+  const didLogin = !!session?.user;
+  if (!didLogin) {
+    const callbackUrl = encodeURIComponent(req.nextUrl.pathname);
+    return NextResponse.redirect(
+      new URL(`/api/auth/signin?callbackUrl=${callbackUrl}`, req.url)
+    );
+  }
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico|robots.txt|images|api/auth|login|regist|$).*)',
+  ],
+};
 ```
 
 9. next.config.ts에 image host 등록
@@ -314,6 +376,8 @@ pnpm db:pull
 generate해서 prisma-client 설치
 ```
 pnpm db:gen
+
+# ==> prisma/schema.prisma 생성
 ```
 
 prisma client (db.ts)
@@ -377,7 +441,7 @@ async function main() {
 }
 ```
 
-11. encrypt password
+11. password cryptor module
 
 ```bash
 pnpm add bcryptjs  
@@ -396,5 +460,10 @@ const isValid =
 ```bash
 pnpm add zod
 ```
+
+13. login & regist (feat. next-auth)
+ - auth.ts
+ - sign.ts (server action)
+ - app/login/page.tsx 작성
 
 

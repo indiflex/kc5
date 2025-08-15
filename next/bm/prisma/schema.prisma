@@ -68,7 +68,6 @@ model Mark {
   @@index([maker], map: "fk_Mark_maker_Member")
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model Member {
   id         Int          @id @default(autoincrement()) @db.UnsignedInt
   createdAt  DateTime?    @default(now()) @db.Timestamp(0)
@@ -77,9 +76,10 @@ model Member {
   email      String       @unique(map: "uniq_Member_email") @db.VarChar(128)
   passwd     String?      @db.VarChar(255)
   image      String?      @db.VarChar(255)
-  emailAuth  String?      @db.VarChar(256)
+  emailcheck String?      @db.VarChar(256)
   outdt      String?      @db.VarChar(10)
   descript   String?      @db.VarChar(512)
+  isadmin    Boolean      @default(false)
   Book       Book[]
   FollowBook FollowBook[]
   Likes      Likes[]

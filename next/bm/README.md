@@ -452,8 +452,7 @@ import { compare, hash } from 'bcryptjs';
 
 const encPasswd = await hash(passwd, 10);
 
-const isValid = 
-      await compare(passwd, encPasswd);
+const isValid = await compare(passwd, encPasswd);
 ```
 
 12. zod
@@ -462,8 +461,75 @@ pnpm add zod
 ```
 
 13. login & regist (feat. next-auth)
- - auth.ts
- - sign.ts (server action)
- - app/login/page.tsx 작성
+ 1) sign with button 및 UI 마무리
+```
+```
+
+ 1) auth.ts
+```typescript
+  callbacks: {
+    async signIn({ user, account, profile }) {
+      console.log('🚀 signIn - user:', user, account?.provider, profile);
+      if (!user.email) return false;
+
+      const { email } = user;
+      const userData = await findUserByEmail(email);
+      if (account?.provider === 'credentials') {
+        const isValidPassword =
+          userData?.passwd &&
+          user.password &&
+          (await compare(userData.passwd, user.password));
+
+        if (!userData || !isValidPassword) return false;
+        user.id = String(userData.id);
+        user.name = userData.name;
+        user.image = userData.image;
+      } else {
+        if (!userData) {
+          delete user.id;
+          const newer = await createUser(user as UserData);
+          console.log('🚀 newer:', newer);
+          user.id = String(newer.id);
+          user.isadmin = newer.isadmin;
+        } else {
+          user.id = String(userData?.id);
+        }
+      }
+
+      user.isadmin = userData?.isadmin;
+      return true;
+    },
+    async jwt({ token, user, trigger, session }) {
+      // console.log('🚀 trigger:', trigger, session);
+      // console.log('🚀 jwt - token:', token, user);
+      const userData = trigger === 'update' ? session : user;
+      if (userData) {
+        token.id = userData.id;
+        token.email = userData.email;
+        token.name = userData.name;
+        token.picture = userData.image;
+        token.isadmin = userData.isadmin;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      // console.log('🚀 cb - session:', session, token);
+      if (token) {
+        session.user.id = String(token.id);
+        session.user.email = token.email as string;
+        session.user.name = token.name;
+        session.user.image = token.picture;
+        session.user.isadmin = token.isadmin;
+      }
+      return session;
+    },
+  },
+```
+
+ 1) sign.ts (server action)
+ 1) app/login/page.tsx 작성
+
+
+ https://myaccount.google.com/apppasswords?rapt=AEjHL4NGVqLe024RwSOSCAE6SA3aGQhV_Xf_DCQxPCgd0AUbKq_clAFTKTQRbne0-eC5gUJrDlG_kpMhcXxX02lMOqHy0BxSVvzoddhebKyoU_jz1eZ0LFs
 
 

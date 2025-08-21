@@ -530,6 +530,87 @@ pnpm add zod
  1) app/login/page.tsx 작성
 
 
- https://myaccount.google.com/apppasswords?rapt=AEjHL4NGVqLe024RwSOSCAE6SA3aGQhV_Xf_DCQxPCgd0AUbKq_clAFTKTQRbne0-eC5gUJrDlG_kpMhcXxX02lMOqHy0BxSVvzoddhebKyoU_jz1eZ0LFs
 
+sign.ts - logout 개선
+```typescript
+export const logout = async () => {
+  await signOut({ redirectTo: '/' });
+};
+
+const loginGithub = async () => {
+  login('github', '/bookcase');
+};
+```
+
+login/error/page.tsx
+```tsx
+// pages > error: '/login/error',
+
+// 'use client';
+// import { useSearchParams } from 'next/navigation';
+
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { use } from 'react';
+
+const getErrorMessage = (error: string) => {
+  if (error === 'CheckEmail') return '이메일 승인 후 다시 로그인해주세요!';
+  return '알 수 없는 오류 발생!';
+};
+
+type Props = {
+  searchParams: Promise<{ error: string }>;
+};
+
+export default function LoginError({ searchParams }: Props) {
+  // const searchParams = useSearchParams();
+  // const error = searchParams.get('error')!;
+  const { error } = use(searchParams);
+
+  return (
+    <div className='grid place-items-center h-full'>
+      <div className='border p-5 text-center'>
+        <h1 className='text-xl mb-5'>{getErrorMessage(error)}</h1>
+        <Button variant={'outline'} asChild={true}>
+          <Link href='/'>OK</Link>
+        </Button>
+      </div>
+    </div>
+  );
+}
+```
+
+api/sendmail/route.ts
+```typescript
+import { sendRegistCheck } from '@/actions/mailer';
+import { NextResponse } from 'next/server';
+
+export async function POST(req: Request) {
+  const auth = req.headers.get('authorization');
+  if (auth !== `Bearer ${process.env.INTERNAL_SECRET}`) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const { email, emailcheck } = await req.json();
+  const emailRes = sendRegistCheck(email, emailcheck);
+
+  return NextResponse.json({ emailRes });
+}
+
+```
+
+api.rest
+```
+@host = http://localhost:3000
+@auth_token=AXBXCX
+
+### regist email
+POST {{host}}/api/sendmail
+Authorization: Bearer {{auth_token}}
+
+{
+  "email": "indiflex1@gmail.com",
+  "emailcheck": "ABCDFEWFAEAWFEWFAFDFDF"
+}
+```
 

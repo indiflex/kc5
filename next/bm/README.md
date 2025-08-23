@@ -583,20 +583,35 @@ export default function LoginError({ searchParams }: Props) {
 api/sendmail/route.ts
 ```typescript
 import { sendRegistCheck } from '@/actions/mailer';
+import { v4 as uuidv4 } from 'uuid';
+import { redirect } from 'next/navigation';
 import { NextResponse } from 'next/server';
+import prisma from '@/lib/db';
 
 export async function POST(req: Request) {
-  const auth = req.headers.get('authorization');
-  if (auth !== `Bearer ${process.env.INTERNAL_SECRET}`) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const { email, emailcheck, oldEmailcheck } = await req.json();
+
+  // resend...
+  if (oldEmailcheck) {
+    const mbr = await prisma.member.findUnique({ where: { email } });
+    if (mbr?.emailcheck !== oldEmailcheck) {
+      redirect('/login/error?error=InvalidToken'); // abusing
+    }
+    const newToken = uuidv4();
+    await prisma.member.update({
+      data: { emailcheck: newToken },
+      where: { email },
+    });
+    await sendRegistCheck(email, newToken);
+  } else {
+    const authorization = req.headers.get('authorization');
+    if (authorization !== `Bearer ${process.env.INTERNAL_SECRET}`)
+      throw new Error('InvalidToken');
+    await sendRegistCheck(email, emailcheck);
   }
 
-  const { email, emailcheck } = await req.json();
-  const emailRes = sendRegistCheck(email, emailcheck);
-
-  return NextResponse.json({ emailRes });
+  return NextResponse.json({ email, message: 'Email Resent.' });
 }
-
 ```
 
 api.rest
@@ -614,3 +629,101 @@ Authorization: Bearer {{auth_token}}
 }
 ```
 
+lib/validator.ts (for regist)
+```typescript
+export type ValidError = {
+  success: false;
+  error: Record<string, { errors: string[] }>;
+};
+export type ValidSuccess<T = object> = {
+  success: true;
+  data: T;
+};
+
+export const validate = <T extends z.ZodObject>(
+  zobj: z.ZodObject,
+  formData: FormData
+) => {
+  const entries = Object.fromEntries(formData.entries());
+  const validator = zobj.safeParse(entries);
+  if (!validator.success) {
+    return {
+      error: z.treeifyError(validator.error).properties,
+    } as ValidError;
+  }
+
+  const data = validator.data;
+  return { success: true, data } as ValidSuccess<z.infer<T>>;
+};
+```
+
+actions/sign.ts
+```typescript
+export const regist = async (formData: FormData) => {
+  const zobj = z
+    .object({
+      email: z.email(),
+      passwd: z.string().min(6),
+      passwd2: z.string().min(6),
+      nickname: z.string().min(3),
+    })
+    .refine(({ passwd, passwd2 }) => passwd === passwd2, {
+      path: ['passwd2'],
+      error: 'Password check is not matching!',
+    });
+  const validator = validate<typeof zobj>(zobj, formData);
+  if (!validator.success) {
+    return validator;
+  }
+
+  const emailcheck = uuidv4();
+  const { passwd2: _passwd2, ...data } = { ...validator.data, emailcheck };
+  await prisma.member.create({ data });
+
+  // await sendRegistCheck('indiflex.corp@gmail.com', authKey); // stream error
+  const { NEXT_PUBLIC_URL, INTERNAL_SECRET } = process.env;
+  await fetch(`${NEXT_PUBLIC_URL}/api/sendmail`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${INTERNAL_SECRET}`,
+    },
+    body: JSON.stringify({
+      email: data.email,
+      emailcheck,
+    }),
+  });
+  console.log('Mail has sent.');
+
+  return { success: true, data } as ValidSuccess<typeof data>;
+};
+
+// cf. lint에서 _시작 제거
+  rules: {
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+    ],
+  },
+```
+
+sign-form.tsx에 <RegistForm>
+```typescript
+const [validError, register, isPending] = useActionState(
+  async (_preError: ValidError | undefined, formData: FormData) => {
+    const rs = await regist(formData);
+    console.log('🚀 ~ rs:', rs);
+    if (!rs.success) return rs;
+    redirect(`/login/error?error=CheckEmail&email=${rs.data.email}`);
+  },
+  undefined
+);
+
+const [isTransitioning, startTransition] = useTransition();
+const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  startTransition(() => {
+    register(new FormData(e.currentTarget));
+  });
+};
+```
